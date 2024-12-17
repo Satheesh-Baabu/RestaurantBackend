@@ -84,6 +84,14 @@ app.post('/addfood', upload.single('file'), async (req, res) => {
       res.status(500).json({ error: 'Failed to add food' });
     }
   });
+
+app.get('/foodlist',(req,res)=>
+{
+    AddFoodModel.find()
+    .then((result)=>{res.json(result)})
+    .catch(err=>res.json({error:"Failed to fetch results"}))
+})
+
   
 
 

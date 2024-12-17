@@ -13,7 +13,7 @@ app.use(express.static('./images'))
 
 
 
-mongoose.connect("mongodb+srv://satheeshbaabum:admin%40123@user.wvnzk.mongodb.net/?retryWrites=true&w=majority&appName=User")
+mongoose.connect("mongodb+srv://satheeshbaabum:admin%40123@user.wvnzk.mongodb.net/restaurant?retryWrites=true&w=majority&appName=User")
 .then(() => console.log("DB Connected"))
 .catch((err) => console.error("DB not connected: ", err));
 

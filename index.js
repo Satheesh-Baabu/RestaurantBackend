@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const multer = require('multer')
 const path = require('path')
 const mongoose=require('mongoose')
+const AddFoodModel=require('./models/AddFoodModel')
 
 const app=express()
 app.use(cors())
@@ -12,10 +13,7 @@ app.use(express.static('./images'))
 
 
 
-mongoose.connect("mongodb+srv://satheeshbaabum:admin%40123@user.wvnzk.mongodb.net/myDatabase?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect("mongodb+srv://satheeshbaabum:admin%40123@user.wvnzk.mongodb.net/?retryWrites=true&w=majority&appName=User")
 .then(() => console.log("DB Connected"))
 .catch((err) => console.error("DB not connected: ", err));
 
@@ -60,6 +58,33 @@ app.post('/upload',(req,res)=>{
         }
     })
 })
+
+app.post('/addfood', upload.single('file'), async (req, res) => {
+    try {
+      const { foodname, foodtype, price, description } = req.body;
+  
+      if (!req.file) {
+        return res.status(400).json({ message: "File upload is required" });
+      }
+  
+      const filename = req.file.filename;
+  
+      const newFood = new AddFoodModel({
+        foodname,
+        foodtype,
+        price,
+        description,
+        filename, // Save the uploaded file's name
+      });
+  
+      await newFood.save();
+      res.status(201).json({ message: 'Food added successfully', food: newFood });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to add food' });
+    }
+  });
+  
 
 
 const PORT = process.env.PORT || 8000;

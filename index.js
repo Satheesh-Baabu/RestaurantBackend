@@ -119,6 +119,25 @@ app.get('/foodlist',(req,res)=>
     .then((result)=>{res.json(result)})
     .catch(err=>res.json({error:"Failed to fetch results"}))
 })
+app.put('/foodlist/:id',async(req,res)=>
+{
+  try{
+    const {id}=req.params
+    const {active}=req.body
+    const updatefood =await AddFoodModel.findByIdAndUpdate(
+      id,{active},{new:true}
+    );
+    if(!updatefood)
+    {
+      return res.status(404).json({message:"food not found"})
+    }
+    res.json({ message: "QR updated successfully", qr: updatefood });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update Food" });
+  }
+})
 
 app.get('/qrlist',(req,res)=>
     {

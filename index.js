@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 const foodRoutes = require('./routes/foodRoutes');
 const qrRoutes = require('./routes/qrRoutes');
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -19,6 +20,50 @@ connectDB();
 // Routes
 app.use('', foodRoutes);
 app.use('', qrRoutes);
+
+//Jwt token
+const secretkey="abcdef"
+const verifyToken=(req,res,next)=>{
+
+}
+const users =[]
+app.post("/signin",async(req,res)=>{
+    
+    try{
+        const {username,pass}=req.body;
+        hashpass=await bcrypt.hash(pass,10)
+        users.push({username,password:hashpass})
+        res.status(200).json("User created successfully")
+        console.log(users)
+    }
+    catch(err)
+    {
+        res.status(500).json("Error in create user")
+    }
+})
+
+app.post("/login",async(req,res)=>{
+    console.log("inside")
+    try{
+        
+        const {username,pass}=req.body;
+        console.log("hello",username,pass)
+        const user=users.find(u=>u.username===username)
+
+        if(!user) 
+            return res.status(400).json("No user found")
+        const validatePassword= await bcrypt.compare(pass,user.password)
+
+        if(!validatePassword)
+            return res.status(200).json("Password is incorrect")
+        const token=jwt.sign({username:user.username},secretkey)
+        
+        res.json(token)
+    }
+    catch(err){
+        res.status(500).json("Failed to Login")
+    }
+})
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

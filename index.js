@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 const foodRoutes = require('./routes/foodRoutes');
 const qrRoutes = require('./routes/qrRoutes');
-const dashboardRoutes=require('./routes/dashboardRoutes')
+const dashboardRoutes=require('./routes/dashboardRoutes');
+const { menulist } = require('./controllers/mobile/MenulistController');
 
 
 
@@ -23,6 +24,7 @@ connectDB();
 app.use('', foodRoutes);
 app.use('', qrRoutes);
 app.use('',dashboardRoutes);
+app.use('',menulist)
 
 
 
